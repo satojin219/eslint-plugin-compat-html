@@ -51,7 +51,7 @@ const rule: Rule.RuleModule = {
       : parseBrowserslistConfig();
 
     function checkJSXElement(node: any) {
-      const elementName = node.name?.name;
+      const elementName = node.openingElement?.name?.name || node.name?.name;
       if (!elementName) return;
 
       const elementResult = checkHtmlElementCompatibility(
@@ -69,11 +69,19 @@ const rule: Rule.RuleModule = {
         });
       }
 
-      if (node.attributes) {
+      const attributes = node.openingElement?.attributes || node.attributes;
+      if (attributes) {
         // for...of ループに修正
-        for (const attr of node.attributes) {
+        for (const attr of attributes) {
           if (attr.type === "JSXAttribute" && attr.name?.name) {
             const attrName = attr.name.name.toLowerCase();
+            
+            // JSX固有の属性をスキップ
+            const jsxOnlyAttributes = ['classname', 'htmlfor', 'defaultvalue', 'defaultchecked'];
+            if (jsxOnlyAttributes.includes(attrName)) {
+              continue;
+            }
+            
             const attrResult = checkHtmlAttributeCompatibility(
               elementName,
               attrName,
@@ -144,14 +152,9 @@ const rule: Rule.RuleModule = {
     }
 
     return {
-      // JSXElement と JSXOpeningElement の両方で同じ checkJSXElement を呼び出すのは冗長かもしれません。
-      // 一般的に、AST ウォーカーは OpeningElement または Element のどちらか一方で十分なことが多いです。
-      // JSXOpeningElement は JSXElement の子ノードとしてアクセスできるため、
-      // 多くの場合 JSXElement だけで十分ですが、具体的な AST の構造によります。
       JSXElement: checkJSXElement,
-      // JSXOpeningElement: checkJSXElement, // 必要なければコメントアウトまたは削除を検討
       HTMLElement: checkHTMLElement,
-      // Element: checkHTMLElement // 必要なければコメントアウトまたは削除を検討
+      Element: checkHTMLElement
     };
   },
 };

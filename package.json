@@ -1,0 +1,72 @@
+{
+  "name": "eslint-plugin-compat-html",
+  "version": "1.0.0",
+  "description": "ESLint plugin to check HTML element and attribute compatibility using browserslist and @mdn/browser-compat-data",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "files": [
+    "lib/**/*",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "test": "jest",
+    "lint": "eslint src/**/*.ts",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run build && npm test",
+    "version": "npm run build && git add -A",
+    "postversion": "git push && git push --tags"
+  },
+  "keywords": [
+    "eslint",
+    "eslint-plugin",
+    "plugin",
+    "browser-compatibility",
+    "browserslist",
+    "mdn",
+    "jsx",
+    "react",
+    "accessibility",
+    "web-standards",
+    "frontend",
+    "development"
+  ],
+  "author": "jin.sato",
+  "license": "MIT",
+  "homepage": "https://github.com/satojin219/eslint-plugin-compat-html#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/satojin219/eslint-plugin-compat-html"
+  },
+  "bugs": {
+    "url": "https://github.com/satojin219/eslint-plugin-compat-html/issues"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "dependencies": {
+    "@mdn/browser-compat-data": "^5.0.0",
+    "browserslist": "^4.22.0",
+    "caniuse-lite": "^1.0.30001000"
+  },
+  "devDependencies": {
+    "@types/eslint": "^8.0.0",
+    "@types/jest": "^29.0.0",
+    "@types/node": "^20.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.0.0",
+    "jest": "^29.0.0",
+    "ts-jest": "^29.0.0",
+    "typescript": "^5.0.0"
+  },
+  "peerDependencies": {
+    "eslint": "^8.0.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
+}

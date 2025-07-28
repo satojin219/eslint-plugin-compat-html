@@ -20,7 +20,15 @@ function getBrowserName(browserKey: string): string {
     'ios_saf': 'safari_ios',
     'and_chr': 'chrome_android',
     'and_ff': 'firefox_android',
-    'samsung': 'samsunginternet_android'
+    'and_qq': 'qq_android',
+    'and_uc': 'uc_android',
+    'android': 'webview_android',
+    'baidu': 'baidu',
+    'ie_mob': 'ie',
+    'op_mini': 'opera_mini',
+    'op_mob': 'opera_android',
+    'samsung': 'samsunginternet_android',
+    'kaios': 'kaios'
   };
   return browserMap[browserKey] || browserKey;
 }
@@ -76,8 +84,8 @@ export function checkHtmlElementCompatibility(
   
   if (!elementData || !elementData.__compat) {
     return {
-      isSupported: false,
-      unsupportedBrowsers: targetBrowsers.map(b => `${b.browser} ${b.version}`),
+      isSupported: true,
+      unsupportedBrowsers: [],
       feature
     };
   }
@@ -89,7 +97,7 @@ export function checkHtmlElementCompatibility(
     const browserName = getBrowserName(target.browser);
     const browserSupport = support[browserName as keyof typeof support];
     
-    if (!isVersionSupported(browserSupport, target.version)) {
+    if (browserSupport && !isVersionSupported(browserSupport, target.version)) {
       unsupportedBrowsers.push(`${target.browser} ${target.version}`);
     }
   }
@@ -111,8 +119,8 @@ export function checkHtmlAttributeCompatibility(
   
   if (!elementData) {
     return {
-      isSupported: false,
-      unsupportedBrowsers: targetBrowsers.map(b => `${b.browser} ${b.version}`),
+      isSupported: true,
+      unsupportedBrowsers: [],
       feature
     };
   }
@@ -122,8 +130,8 @@ export function checkHtmlAttributeCompatibility(
     const globalAttribute = bcd.html?.global_attributes?.[attribute];
     if (!globalAttribute || !globalAttribute.__compat) {
       return {
-        isSupported: false,
-        unsupportedBrowsers: targetBrowsers.map(b => `${b.browser} ${b.version}`),
+        isSupported: true,
+        unsupportedBrowsers: [],
         feature
       };
     }
@@ -135,7 +143,7 @@ export function checkHtmlAttributeCompatibility(
       const browserName = getBrowserName(target.browser);
       const browserSupport = support[browserName as keyof typeof support];
       
-      if (!isVersionSupported(browserSupport, target.version)) {
+      if (browserSupport && !isVersionSupported(browserSupport, target.version)) {
         unsupportedBrowsers.push(`${target.browser} ${target.version}`);
       }
     }
@@ -154,7 +162,7 @@ export function checkHtmlAttributeCompatibility(
     const browserName = getBrowserName(target.browser);
     const browserSupport = support[browserName as keyof typeof support];
     
-    if (!isVersionSupported(browserSupport, target.version)) {
+    if (browserSupport && !isVersionSupported(browserSupport, target.version)) {
       unsupportedBrowsers.push(`${target.browser} ${target.version}`);
     }
   }

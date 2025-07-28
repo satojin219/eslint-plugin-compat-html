@@ -50,7 +50,7 @@ const rule: Rule.RuleModule = {
       ? getSupportedBrowsers(options.browserslistConfig)
       : parseBrowserslistConfig();
 
-    function checkJSXElement(node: TSESTree.JSXElement) {
+    function checkJSXElement(node: any) {
       const elementName = node.openingElement?.name?.name || node.name?.name;
       if (!elementName) return;
 

@@ -40,13 +40,13 @@ const rule: Rule.RuleModule = {
     ],
     messages: {
       incompatibleElement:
-        'HTML element "{{element}}" is not supported in: {{browsers}}',
+        'HTML element "{{element}}" is not supported in: {{browsers}}. See {{mdnUrl}} for details.',
       incompatibleAttribute:
-        'HTML attribute "{{attribute}}" on element "{{element}}" is not supported in: {{browsers}}',
+        'HTML attribute "{{attribute}}" on element "{{element}}" is not supported in: {{browsers}}. See {{mdnUrl}} for details.',
       deprecatedElement:
-        'HTML element "{{element}}" is deprecated{{deprecationNote}}',
+        'HTML element "{{element}}" is deprecated{{deprecationNote}}. See {{mdnUrl}} for details.',
       deprecatedAttribute:
-        'HTML attribute "{{attribute}}" on element "{{element}}" is deprecated{{deprecationNote}}',
+        'HTML attribute "{{attribute}}" on element "{{element}}" is deprecated{{deprecationNote}}. See {{mdnUrl}} for details.',
     },
   },
 
@@ -71,6 +71,7 @@ const rule: Rule.RuleModule = {
           data: {
             element: elementName,
             browsers: elementResult.unsupportedBrowsers.join(", "),
+            mdnUrl: elementResult.mdnUrl || '',
           },
         });
       }
@@ -85,6 +86,7 @@ const rule: Rule.RuleModule = {
             deprecationNote: deprecationResult.deprecationNote 
               ? `: ${deprecationResult.deprecationNote}` 
               : '',
+            mdnUrl: deprecationResult.mdnUrl || '',
           },
         });
       }
@@ -114,6 +116,7 @@ const rule: Rule.RuleModule = {
                   attribute: attrName,
                   element: elementName,
                   browsers: attrResult.unsupportedBrowsers.join(", "),
+                  mdnUrl: attrResult.mdnUrl || '',
                 },
               });
             }
@@ -129,6 +132,7 @@ const rule: Rule.RuleModule = {
                   deprecationNote: attrDeprecationResult.deprecationNote 
                     ? `: ${attrDeprecationResult.deprecationNote}` 
                     : '',
+                  mdnUrl: attrDeprecationResult.mdnUrl || '',
                 },
               });
             }

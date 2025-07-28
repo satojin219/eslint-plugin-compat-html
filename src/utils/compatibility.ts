@@ -7,12 +7,34 @@ export interface CompatibilityResult {
   isSupported: boolean;
   unsupportedBrowsers: string[];
   feature: string;
+  mdnUrl?: string;
 }
 
 export interface DeprecationResult {
   isDeprecated: boolean;
   deprecationNote?: string;
   feature: string;
+  mdnUrl?: string;
+}
+
+function generateMdnUrl(feature: string): string {
+  const baseUrl = 'https://developer.mozilla.org/en-US/docs/Web/';
+  
+  if (feature.startsWith('html.elements.')) {
+    const element = feature.replace('html.elements.', '');
+    if (element.includes('.')) {
+      const [elementName, attribute] = element.split('.');
+      return `${baseUrl}HTML/Element/${elementName}#${attribute}`;
+    }
+    return `${baseUrl}HTML/Element/${element}`;
+  }
+  
+  if (feature.startsWith('html.global_attributes.')) {
+    const attribute = feature.replace('html.global_attributes.', '');
+    return `${baseUrl}HTML/Global_attributes/${attribute}`;
+  }
+  
+  return `${baseUrl}HTML`;
 }
 
 function getBrowserName(browserKey: string): string {
@@ -111,7 +133,8 @@ export function checkHtmlElementCompatibility(
   return {
     isSupported: unsupportedBrowsers.length === 0,
     unsupportedBrowsers,
-    feature
+    feature,
+    mdnUrl: generateMdnUrl(feature)
   };
 }
 
@@ -122,7 +145,8 @@ export function checkHtmlElementDeprecation(element: string): DeprecationResult 
   if (!elementData || !elementData.__compat) {
     return {
       isDeprecated: false,
-      feature
+      feature,
+      mdnUrl: generateMdnUrl(feature)
     };
   }
   
@@ -132,13 +156,15 @@ export function checkHtmlElementDeprecation(element: string): DeprecationResult 
     return {
       isDeprecated: true,
       deprecationNote: status.deprecated === true ? undefined : String(status.deprecated),
-      feature
+      feature,
+      mdnUrl: generateMdnUrl(feature)
     };
   }
   
   return {
     isDeprecated: false,
-    feature
+    feature,
+    mdnUrl: generateMdnUrl(feature)
   };
 }
 
@@ -257,6 +283,7 @@ export function checkHtmlAttributeCompatibility(
   return {
     isSupported: unsupportedBrowsers.length === 0,
     unsupportedBrowsers,
-    feature
+    feature,
+    mdnUrl: generateMdnUrl(feature)
   };
 }

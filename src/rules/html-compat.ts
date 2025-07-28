@@ -71,12 +71,10 @@ const rule: Rule.RuleModule = {
 
       const attributes = node.openingElement?.attributes || node.attributes;
       if (attributes) {
-        // for...of ループに修正
         for (const attr of attributes) {
           if (attr.type === "JSXAttribute" && attr.name?.name) {
             const attrName = attr.name.name.toLowerCase();
             
-            // JSX固有の属性をスキップ
             const jsxOnlyAttributes = ['classname', 'htmlfor', 'defaultvalue', 'defaultchecked'];
             if (jsxOnlyAttributes.includes(attrName)) {
               continue;
@@ -124,7 +122,6 @@ const rule: Rule.RuleModule = {
       }
 
       if (node.attributes) {
-        // for...of ループに修正
         for (const attr of node.attributes) {
           const attrName =
             attr.key?.name?.toLowerCase() || attr.name?.toLowerCase();

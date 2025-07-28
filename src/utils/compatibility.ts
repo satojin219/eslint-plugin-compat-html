@@ -9,6 +9,12 @@ export interface CompatibilityResult {
   feature: string;
 }
 
+export interface DeprecationResult {
+  isDeprecated: boolean;
+  deprecationNote?: string;
+  feature: string;
+}
+
 function getBrowserName(browserKey: string): string {
   const browserMap: Record<string, string> = {
     'chrome': 'chrome',
@@ -105,6 +111,87 @@ export function checkHtmlElementCompatibility(
   return {
     isSupported: unsupportedBrowsers.length === 0,
     unsupportedBrowsers,
+    feature
+  };
+}
+
+export function checkHtmlElementDeprecation(element: string): DeprecationResult {
+  const feature = `html.elements.${element}`;
+  const elementData = bcd.html?.elements?.[element];
+  
+  if (!elementData || !elementData.__compat) {
+    return {
+      isDeprecated: false,
+      feature
+    };
+  }
+  
+  const status = elementData.__compat.status;
+  
+  if (status?.deprecated) {
+    return {
+      isDeprecated: true,
+      deprecationNote: status.deprecated === true ? undefined : String(status.deprecated),
+      feature
+    };
+  }
+  
+  return {
+    isDeprecated: false,
+    feature
+  };
+}
+
+export function checkHtmlAttributeDeprecation(
+  element: string, 
+  attribute: string
+): DeprecationResult {
+  const feature = `html.elements.${element}.${attribute}`;
+  const elementData = bcd.html?.elements?.[element];
+  
+  if (!elementData) {
+    return {
+      isDeprecated: false,
+      feature
+    };
+  }
+  
+  const attributeData = elementData[attribute];
+  if (!attributeData || !attributeData.__compat) {
+    const globalAttribute = bcd.html?.global_attributes?.[attribute];
+    if (!globalAttribute || !globalAttribute.__compat) {
+      return {
+        isDeprecated: false,
+        feature
+      };
+    }
+    
+    const status = globalAttribute.__compat.status;
+    if (status?.deprecated) {
+      return {
+        isDeprecated: true,
+        deprecationNote: status.deprecated === true ? undefined : String(status.deprecated),
+        feature: `html.global_attributes.${attribute}`
+      };
+    }
+    
+    return {
+      isDeprecated: false,
+      feature: `html.global_attributes.${attribute}`
+    };
+  }
+  
+  const status = attributeData.__compat.status;
+  if (status?.deprecated) {
+    return {
+      isDeprecated: true,
+      deprecationNote: status.deprecated === true ? undefined : String(status.deprecated),
+      feature
+    };
+  }
+  
+  return {
+    isDeprecated: false,
     feature
   };
 }

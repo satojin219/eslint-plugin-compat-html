@@ -6,6 +6,8 @@ import {
 import {
   checkHtmlElementCompatibility,
   checkHtmlAttributeCompatibility,
+  checkHtmlElementDeprecation,
+  checkHtmlAttributeDeprecation,
 } from "../utils/compatibility";
 
 interface RuleOptions {
@@ -41,6 +43,10 @@ const rule: Rule.RuleModule = {
         'HTML element "{{element}}" is not supported in: {{browsers}}',
       incompatibleAttribute:
         'HTML attribute "{{attribute}}" on element "{{element}}" is not supported in: {{browsers}}',
+      deprecatedElement:
+        'HTML element "{{element}}" is deprecated{{deprecationNote}}',
+      deprecatedAttribute:
+        'HTML attribute "{{attribute}}" on element "{{element}}" is deprecated{{deprecationNote}}',
     },
   },
 
@@ -65,6 +71,20 @@ const rule: Rule.RuleModule = {
           data: {
             element: elementName,
             browsers: elementResult.unsupportedBrowsers.join(", "),
+          },
+        });
+      }
+
+      const deprecationResult = checkHtmlElementDeprecation(elementName);
+      if (deprecationResult.isDeprecated) {
+        context.report({
+          node,
+          messageId: "deprecatedElement",
+          data: {
+            element: elementName,
+            deprecationNote: deprecationResult.deprecationNote 
+              ? `: ${deprecationResult.deprecationNote}` 
+              : '',
           },
         });
       }
@@ -97,6 +117,21 @@ const rule: Rule.RuleModule = {
                 },
               });
             }
+
+            const attrDeprecationResult = checkHtmlAttributeDeprecation(elementName, attrName);
+            if (attrDeprecationResult.isDeprecated) {
+              context.report({
+                node: attr,
+                messageId: "deprecatedAttribute",
+                data: {
+                  attribute: attrName,
+                  element: elementName,
+                  deprecationNote: attrDeprecationResult.deprecationNote 
+                    ? `: ${attrDeprecationResult.deprecationNote}` 
+                    : '',
+                },
+              });
+            }
           }
         }
       }
@@ -121,6 +156,20 @@ const rule: Rule.RuleModule = {
         });
       }
 
+      const deprecationResult = checkHtmlElementDeprecation(elementName);
+      if (deprecationResult.isDeprecated) {
+        context.report({
+          node,
+          messageId: "deprecatedElement",
+          data: {
+            element: elementName,
+            deprecationNote: deprecationResult.deprecationNote 
+              ? `: ${deprecationResult.deprecationNote}` 
+              : '',
+          },
+        });
+      }
+
       if (node.attributes) {
         for (const attr of node.attributes) {
           const attrName =
@@ -140,6 +189,21 @@ const rule: Rule.RuleModule = {
                   attribute: attrName,
                   element: elementName,
                   browsers: attrResult.unsupportedBrowsers.join(", "),
+                },
+              });
+            }
+
+            const attrDeprecationResult = checkHtmlAttributeDeprecation(elementName, attrName);
+            if (attrDeprecationResult.isDeprecated) {
+              context.report({
+                node: attr,
+                messageId: "deprecatedAttribute",
+                data: {
+                  attribute: attrName,
+                  element: elementName,
+                  deprecationNote: attrDeprecationResult.deprecationNote 
+                    ? `: ${attrDeprecationResult.deprecationNote}` 
+                    : '',
                 },
               });
             }

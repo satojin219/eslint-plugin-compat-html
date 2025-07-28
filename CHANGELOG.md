@@ -53,7 +53,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Planned Features
+### Added
+- Deprecated HTML elements and attributes detection with error reporting
+- MDN documentation links in all error messages for better developer experience
+- Enhanced browser compatibility mapping for more accurate browserlist integration
+
+### Changed
+- Improved browserlist integration to only check browsers defined in configuration
+- Better error handling for missing MDN compatibility data (now defaults to supported)
+- More comprehensive browser name mapping (added support for and_qq, and_uc, android, baidu, ie_mob, op_mini, op_mob, kaios)
+
+### Fixed
+- Removed duplicate browser entries in compatibility mapping
+- More accurate version comparison for browser compatibility checks
+
+## [Planned Features]
 - Support for CSS property compatibility checking
 - Integration with Can I Use data
 - Performance optimizations

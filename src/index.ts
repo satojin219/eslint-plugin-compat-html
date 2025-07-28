@@ -1,4 +1,5 @@
 import htmlCompat from "./rules/html-compat";
+import htmlDeprecated from "./rules/html-deprecated";
 
 const plugin = {
   meta: {
@@ -8,12 +9,14 @@ const plugin = {
   },
   rules: {
     "html-compat": htmlCompat,
+    "html-deprecated": htmlDeprecated,
   },
   configs: {
     recommended: {
       plugins: ["compat-html"],
       rules: {
         "compat-html/html-compat": "error",
+        "compat-html/html-deprecated": "error",
       },
     },
   },

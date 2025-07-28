@@ -6,8 +6,6 @@ import {
 import {
   checkHtmlElementCompatibility,
   checkHtmlAttributeCompatibility,
-  checkHtmlElementDeprecation,
-  checkHtmlAttributeDeprecation,
 } from "../utils/compatibility";
 
 interface RuleOptions {
@@ -40,13 +38,9 @@ const rule: Rule.RuleModule = {
     ],
     messages: {
       incompatibleElement:
-        'HTML element "{{element}}" is not supported in: {{browsers}}. See {{mdnUrl}} for details.',
+        'HTML element "{{element}}" is not supported in: {{browsers}}.\n See {{mdnUrl}} for details.',
       incompatibleAttribute:
-        'HTML attribute "{{attribute}}" on element "{{element}}" is not supported in: {{browsers}}. See {{mdnUrl}} for details.',
-      deprecatedElement:
-        'HTML element "{{element}}" is deprecated{{deprecationNote}}. See {{mdnUrl}} for details.',
-      deprecatedAttribute:
-        'HTML attribute "{{attribute}}" on element "{{element}}" is deprecated{{deprecationNote}}. See {{mdnUrl}} for details.',
+        'HTML attribute "{{attribute}}" on element "{{element}}" is not supported in: {{browsers}}.\n See {{mdnUrl}} for details.',
     },
   },
 
@@ -56,7 +50,7 @@ const rule: Rule.RuleModule = {
       ? getSupportedBrowsers(options.browserslistConfig)
       : parseBrowserslistConfig();
 
-    function checkJSXElement(node: any) {
+    function checkJSXElement(node: TSESTree.JSXElement) {
       const elementName = node.openingElement?.name?.name || node.name?.name;
       if (!elementName) return;
 
@@ -71,22 +65,7 @@ const rule: Rule.RuleModule = {
           data: {
             element: elementName,
             browsers: elementResult.unsupportedBrowsers.join(", "),
-            mdnUrl: elementResult.mdnUrl || '',
-          },
-        });
-      }
-
-      const deprecationResult = checkHtmlElementDeprecation(elementName);
-      if (deprecationResult.isDeprecated) {
-        context.report({
-          node,
-          messageId: "deprecatedElement",
-          data: {
-            element: elementName,
-            deprecationNote: deprecationResult.deprecationNote 
-              ? `: ${deprecationResult.deprecationNote}` 
-              : '',
-            mdnUrl: deprecationResult.mdnUrl || '',
+            mdnUrl: elementResult.mdnUrl || "",
           },
         });
       }
@@ -96,12 +75,17 @@ const rule: Rule.RuleModule = {
         for (const attr of attributes) {
           if (attr.type === "JSXAttribute" && attr.name?.name) {
             const attrName = attr.name.name.toLowerCase();
-            
-            const jsxOnlyAttributes = ['classname', 'htmlfor', 'defaultvalue', 'defaultchecked'];
+
+            const jsxOnlyAttributes = [
+              "classname",
+              "htmlfor",
+              "defaultvalue",
+              "defaultchecked",
+            ];
             if (jsxOnlyAttributes.includes(attrName)) {
               continue;
             }
-            
+
             const attrResult = checkHtmlAttributeCompatibility(
               elementName,
               attrName,
@@ -116,23 +100,7 @@ const rule: Rule.RuleModule = {
                   attribute: attrName,
                   element: elementName,
                   browsers: attrResult.unsupportedBrowsers.join(", "),
-                  mdnUrl: attrResult.mdnUrl || '',
-                },
-              });
-            }
-
-            const attrDeprecationResult = checkHtmlAttributeDeprecation(elementName, attrName);
-            if (attrDeprecationResult.isDeprecated) {
-              context.report({
-                node: attr,
-                messageId: "deprecatedAttribute",
-                data: {
-                  attribute: attrName,
-                  element: elementName,
-                  deprecationNote: attrDeprecationResult.deprecationNote 
-                    ? `: ${attrDeprecationResult.deprecationNote}` 
-                    : '',
-                  mdnUrl: attrDeprecationResult.mdnUrl || '',
+                  mdnUrl: attrResult.mdnUrl || "",
                 },
               });
             }
@@ -156,20 +124,7 @@ const rule: Rule.RuleModule = {
           data: {
             element: elementName,
             browsers: elementResult.unsupportedBrowsers.join(", "),
-          },
-        });
-      }
-
-      const deprecationResult = checkHtmlElementDeprecation(elementName);
-      if (deprecationResult.isDeprecated) {
-        context.report({
-          node,
-          messageId: "deprecatedElement",
-          data: {
-            element: elementName,
-            deprecationNote: deprecationResult.deprecationNote 
-              ? `: ${deprecationResult.deprecationNote}` 
-              : '',
+            mdnUrl: elementResult.mdnUrl || "",
           },
         });
       }
@@ -193,21 +148,7 @@ const rule: Rule.RuleModule = {
                   attribute: attrName,
                   element: elementName,
                   browsers: attrResult.unsupportedBrowsers.join(", "),
-                },
-              });
-            }
-
-            const attrDeprecationResult = checkHtmlAttributeDeprecation(elementName, attrName);
-            if (attrDeprecationResult.isDeprecated) {
-              context.report({
-                node: attr,
-                messageId: "deprecatedAttribute",
-                data: {
-                  attribute: attrName,
-                  element: elementName,
-                  deprecationNote: attrDeprecationResult.deprecationNote 
-                    ? `: ${attrDeprecationResult.deprecationNote}` 
-                    : '',
+                  mdnUrl: attrResult.mdnUrl || "",
                 },
               });
             }
@@ -219,7 +160,7 @@ const rule: Rule.RuleModule = {
     return {
       JSXElement: checkJSXElement,
       HTMLElement: checkHTMLElement,
-      Element: checkHTMLElement
+      Element: checkHTMLElement,
     };
   },
 };

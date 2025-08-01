@@ -1,5 +1,5 @@
 {
-  "name": "@satojin219/eslint-plugin-html-compat",
+  "name": "eslint-plugin-html-compat",
   "version": "1.0.0",
   "description": "ESLint plugin to check HTML element and attribute compatibility using browserslist and @mdn/browser-compat-data",
   "main": "lib/index.js",

@@ -67,11 +67,25 @@ Add to your ESLint configuration:
 }
 ```
 
+### Ignoring Specific Browsers
+
+```json
+{
+  "rules": {
+    "compat-html/html-compat": ["error", {
+      "browserslistConfig": ["> 1%", "last 2 versions"],
+      "ignoreBrowsers": ["ie 11", "opera_mini"]
+    }]
+  }
+}
+```
+
 ## 🔧 Configuration Options
 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
 | `browserslistConfig` | `string[]` | Project's browserslist | Custom browser targets |
+| `ignoreBrowsers` | `string[]` | `[]` | List of browsers to ignore in compatibility checks |
 
 ## 📝 Examples
 

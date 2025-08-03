@@ -26,6 +26,20 @@ describe('html-compat rule', () => {
       {
         code: '<p id="paragraph">Text</p>',
         options: [{ browserslistConfig: ['> 1%'] }]
+      },
+      {
+        code: '<dialog>Modal content</dialog>',
+        options: [{ 
+          browserslistConfig: ['ie 11'], 
+          ignoreBrowsers: ['ie 11'] 
+        }]
+      },
+      {
+        code: '<details><summary>Summary</summary>Details</details>',
+        options: [{ 
+          browserslistConfig: ['ie 11'], 
+          ignoreBrowsers: ['ie'] 
+        }]
       }
     ],
     
@@ -46,6 +60,18 @@ describe('html-compat rule', () => {
           {
             messageId: 'incompatibleElement'
           },
+          {
+            messageId: 'incompatibleElement'
+          }
+        ]
+      },
+      {
+        code: '<dialog>Modal content</dialog>',
+        options: [{ 
+          browserslistConfig: ['ie 11', 'firefox 50'], 
+          ignoreBrowsers: ['ie 11'] 
+        }],
+        errors: [
           {
             messageId: 'incompatibleElement'
           }

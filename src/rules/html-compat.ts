@@ -10,6 +10,7 @@ import {
 
 interface RuleOptions {
   browserslistConfig?: string | string[];
+  ignoreBrowsers?: string[];
 }
 
 const rule: Rule.RuleModule = {
@@ -31,6 +32,11 @@ const rule: Rule.RuleModule = {
               { type: "string" },
               { type: "array", items: { type: "string" } },
             ],
+          },
+          ignoreBrowsers: {
+            type: "array",
+            items: { type: "string" },
+            description: "List of browsers to ignore in compatibility checks (e.g., ['ie 11', 'opera_mini'])",
           },
         },
         additionalProperties: false,
@@ -56,7 +62,8 @@ const rule: Rule.RuleModule = {
 
       const elementResult = checkHtmlElementCompatibility(
         elementName,
-        targetBrowsers
+        targetBrowsers,
+        options.ignoreBrowsers
       );
       if (!elementResult.isSupported) {
         context.report({
@@ -89,7 +96,8 @@ const rule: Rule.RuleModule = {
             const attrResult = checkHtmlAttributeCompatibility(
               elementName,
               attrName,
-              targetBrowsers
+              targetBrowsers,
+              options.ignoreBrowsers
             );
 
             if (!attrResult.isSupported) {
@@ -137,7 +145,8 @@ const rule: Rule.RuleModule = {
             const attrResult = checkHtmlAttributeCompatibility(
               elementName,
               attrName,
-              targetBrowsers
+              targetBrowsers,
+              options.ignoreBrowsers
             );
 
             if (!attrResult.isSupported) {
@@ -161,6 +170,7 @@ const rule: Rule.RuleModule = {
       JSXElement: checkJSXElement,
       HTMLElement: checkHTMLElement,
       Element: checkHTMLElement,
+      VElement: checkHTMLElement,
     };
   },
 };

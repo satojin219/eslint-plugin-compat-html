@@ -9,8 +9,8 @@ module.exports = [
     },
     rules: {
       "html-compat/html-compat": ["warn", {
-        browserslistConfig: ["> 1%", "last 2 versions","not dead"],
-        ignoreBrowsers: ["android"]
+        browserslistConfig: ["> 1%", "last 2 versions", "not dead", "ie 11", "firefox 60", "safari 12"],
+        ignoreBrowsers: ["safari 12"]
       }]
     },
     languageOptions: {

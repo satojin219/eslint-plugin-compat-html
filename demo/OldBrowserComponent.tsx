@@ -148,8 +148,49 @@ const OldBrowserComponent: React.FC = () => {
       </progress>
 
       <output>計算結果: 42</output>
+
+      {/* Very modern elements and attributes */}
+      <div popover="auto" id="my-popover">
+        <p>This is a popover element (Chrome 114+)</p>
+      </div>
+      
+      <input type="datetime-local" />
+      
+      {/* Web Components */}
+      <slot name="content"></slot>
+      
+      {/* Modern attributes */}
+      <div contentEditable="true" spellCheck="true">
+        編集可能なコンテンツ
+      </div>
+      
+      <img src="example.jpg" alt="example" loading="lazy" decoding="async" />
+      
+      <input type="text" inputMode="numeric" />
+      
+      <video controls>
+        <source src="video.mp4" type="video/mp4" />
+        <track kind="captions" src="captions.vtt" srcLang="ja" />
+      </video>
+      
+      <audio controls>
+        <source src="audio.mp3" type="audio/mp3" />
+      </audio>
+      
+      {/* Safari specific issues */}
+      <input type="date" step="1" />
+      
+      {/* Older Firefox issues */}
+      <input type="color" list="colors" />
+      <datalist id="colors">
+        <option value="#ff0000" />
+        <option value="#00ff00" />
+        <option value="#0000ff" />
+      </datalist>
     </div>
   );
 };
 
 export default OldBrowserComponent;
+
+

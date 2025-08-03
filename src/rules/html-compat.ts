@@ -123,7 +123,8 @@ const rule: Rule.RuleModule = {
 
       const elementResult = checkHtmlElementCompatibility(
         elementName,
-        targetBrowsers
+        targetBrowsers,
+        options.ignoreBrowsers
       );
       if (!elementResult.isSupported) {
         context.report({
